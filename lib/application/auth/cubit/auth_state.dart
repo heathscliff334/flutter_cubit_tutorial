@@ -16,6 +16,6 @@ class AuthError extends AuthState {
 
 class AuthLoginSuccess extends AuthState {
   // ? The data type is string (adjusts the data type like the variable in the infrastructure "Future<String>")
-  final String dataLogin;
+  final LoginResponse dataLogin;
   AuthLoginSuccess(this.dataLogin);
 }

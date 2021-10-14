@@ -28,6 +28,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^7.3.0
+  get_it: ^7.2.0
   widget_circular_animator: ^1.0.0
 
 dev_dependencies:

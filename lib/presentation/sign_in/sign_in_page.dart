@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cubit_1/application/auth/cubit/auth_cubit.dart';
+import 'package:flutter_cubit_1/domain/auth/model/login_request.dart';
 import 'package:flutter_cubit_1/presentation/home/home_page.dart';
 
 import 'package:widget_circular_animator/widget_circular_animator.dart';
@@ -34,12 +35,22 @@ class _SignInPageState extends State<SignInPage> {
             listener: (context, state) {
           if (state is AuthError) {
             print(state.errorMessage);
+            showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                      title: Text("Error"),
+                      content: Text(state.errorMessage),
+                    ));
           } else if (state is AuthLoading) {
             print("loading...");
           } else if (state is AuthLoginSuccess) {
             print(state.dataLogin);
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => HomePage()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => HomePage(
+                      loginResponse: state.dataLogin,
+                    )));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text("Login success")));
           }
         },
             // ? BlocBuilder
@@ -180,10 +191,10 @@ class _SignInPageState extends State<SignInPage> {
     return MaterialButton(
       onPressed: () {
         // Call cubit to sign in
+        final _requestData = LoginRequest(
+            email: _emailController.text, password: _passwordController.text);
         // ! after v6.1.0, .bloc and .repository are changed to .read and .watch
-        context
-            .read<AuthCubit>()
-            .signInUser(_emailController.text, _passwordController.text);
+        context.read<AuthCubit>().signInUser(_requestData);
       },
       color: Colors.black54,
       child: Text(
